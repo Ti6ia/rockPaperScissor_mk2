@@ -49,10 +49,10 @@ body{
     grid-template-rows: 3rem 10rem;
     overflow: scroll;
     margin-block: 2rem;
-    /* border: 1px solid black; */
+    border: 1px solid black;
 }
 .scoreboard>div{
-    /* border: 1px solid purple; */
+    border: 1px solid purple;
 }
 .scoreboardHeadings{
     font-size: 1.5rem;
@@ -61,6 +61,13 @@ body{
 .scores{
     display: flex;
     flex-direction: column;
+}
+
+.winner{
+    background-color: green;
+}
+.loser{
+    background-color: red;
 }
 /* .scores>span{
     display: flex;

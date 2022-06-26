@@ -67,6 +67,21 @@ const displayController = (() =>{
         cpusscores.setAttribute('id', 'cpusscores');
         cpusscores.classList.add('scores');
 
+        const renderScoreboard = () => {
+            let you, cpu;
+            for(let i = 0; i < scoreboard.getScores().length; i++){
+                if(scoreboard.getScores()[i][2] == 'You Won!'){
+                    you = divMaker(['winner', `${scoreboard.getScores()[i][0]}`]);
+                    cpu = divMaker(['loser', `${scoreboard.getScores()[i][1]}`]);
+                }else{
+                    you = divMaker(['loser', `${scoreboard.getScores()[i][0]}`]);
+                    cpu = divMaker(['winner', `${scoreboard.getScores()[i][1]}`]);
+                }
+                yourScores.appendChild(you);
+                cpusscores.appendChild(cpu);
+            }
+        }
+
         //append buttons
         buttons.appendChild(rock);
         buttons.appendChild(paper);
@@ -79,54 +94,123 @@ const displayController = (() =>{
         scoreboard.appendChild(yourScores);
         scoreboard.appendChild(cpusscores);
         content.appendChild(scoreboard);
-
-        return scoreboard;
     }
 
+    let playerSelection = "nulla";
     const setEventListeners = () => {
         const rock = document.querySelector('.rock');
         const paper = document.querySelector('.paper');
         const scissor = document.querySelector('.scissor');
     
-        rock.addEventListener('click', () => { playerSelection = 'rock'; console.log("roccia"); });
-        paper.addEventListener('click', () => { playerSelection = 'paper'; console.log("papera"); });
-        scissor.addEventListener('click', () => { playerSelection = 'scissor'; console.log("cisoia"); });
+        rock.addEventListener('click', () => { 
+            playerSelection = 'rock';
+            gameController.playRound(playerSelection);
+            renderScoreboard();
+        });
+        paper.addEventListener('click', () => { 
+            playerSelection = 'paper';
+            gameController.playRound(playerSelection);
+            renderScoreboard();
+        });
+        scissor.addEventListener('click', () => { 
+            playerSelection = 'scissor';
+            gameController.playRound(playerSelection);
+            renderScoreboard();
+        });
     }
 
-    // //diduwon -> true = you won / false = cpu won
-    // const scoresMaker = (diduwon) => {
-    //     let youScore = document.createElement('div');
-    //     let cpuScore = document.createElement('div');
-    //     if(diduwon == true){
-    //         youScore.classList.add('roundWon');
-    //         //aggiungi simolo giocato
-    //         cpuScore.classList.add('roundLost');
-    //         //aggiungi simolo giocato
-    //     }else{
-    //         youScore.classList.add('roundLost');
-    //         //aggiungi simolo giocato
-    //         cpuScore.classList.add('roundWon');
-    //         //aggiungi simolo giocato
-    //     }
-    //     return {youScore, cpuScore}
-    // }
 
     return {renderHeader, renderFooter, renderSelectRounds, renderGame, setEventListeners};
 })();
 
 
-//SCOREBOARD
-class Scoreboard {
-    constructor(){
-        this.scoreboard = [];
+// const renderGame = (() => {
+//     //buttons
+//     const buttons = document.createElement('div');
+//     buttons.classList.add('centerInline', 'buttons');
+
+//     const rock = document.createElement('div');
+//     rock.classList.add('button', 'rock');
+//     const paper = document.createElement('div');
+//     paper.classList.add('button', 'paper');
+//     const scissor = document.createElement('div');
+//     scissor.classList.add('button', 'scissor');
+
+//     //scoreboard
+//     const scoreboard = document.createElement('div');
+//     scoreboard.classList.add('scoreboard');
+
+//     const scoreboardHeadingYOU = document.createElement('div');
+//     scoreboardHeadingYOU.classList.add('centerInline', 'scoreboardHeadings');
+//     scoreboardHeadingYOU.innerText = "YOU";
+//     const scoreboardHeadingCPU = document.createElement('div');
+//     scoreboardHeadingCPU.classList.add('centerInline', 'scoreboardHeadings');
+//     scoreboardHeadingCPU.innerText = "CPU";
+//     const yourScores = document.createElement('div');
+//     yourScores.setAttribute('id', 'yourscores');
+//     yourScores.classList.add('scores');
+//     const cpusscores = document.createElement('div');
+//     cpusscores.setAttribute('id', 'cpusscores');
+//     cpusscores.classList.add('scores');
+
+//     const renderScoreboard = () => {
+//         let you, cpu;
+//         for(let i = 0; i < scoreboard.getScores().length; i++){
+//             if(scoreboard.getScores()[i][2] == 'You Won!'){
+//                 you = divMaker(['winner', `${scoreboard.getScores()[i][0]}`]);
+//                 cpu = divMaker(['loser', `${scoreboard.getScores()[i][1]}`]);
+//             }else{
+//                 you = divMaker(['loser', `${scoreboard.getScores()[i][0]}`]);
+//                 cpu = divMaker(['winner', `${scoreboard.getScores()[i][1]}`]);
+//             }
+//             yourScores.appendChild(you);
+//             cpusscores.appendChild(cpu);
+//         }
+//     }
+
+//     //append buttons
+//     buttons.appendChild(rock);
+//     buttons.appendChild(paper);
+//     buttons.appendChild(scissor);
+//     content.appendChild(buttons);
+
+//     //append scoreboard
+//     scoreboard.appendChild(scoreboardHeadingYOU);
+//     scoreboard.appendChild(scoreboardHeadingCPU);
+//     scoreboard.appendChild(yourScores);
+//     scoreboard.appendChild(cpusscores);
+//     content.appendChild(scoreboard);
+
+//     return {renderScoreboard}
+// })();
+
+
+const divMaker = (classe, content) => {
+    let div = document.createElement('div');
+    for(let i = 0; i < classe.length; i++){
+        div.classList.add(`${classe[i]}`);
     }
-    getScoreboard(){
-        return this.scoreboard;
+    if(content != undefined){
+        div.innerText = content;
     }
-    setScoreboard(punteggio){
-        this.scoreboard.push(punteggio);
-    }
+    return div;
 }
+
+//SCOREBOARD
+const scoreboard = (() => {
+    let scores = [];
+    
+    const getScores = () => {
+        return scores;
+    }
+
+    const addScore = (resultPlayRound/*array*/) => {
+        scores.push(resultPlayRound);
+        console.log(scores);
+    }
+
+    return {addScore, getScores};
+})();
 
 
 //GAME CONTROLLER
@@ -146,36 +230,36 @@ const gameController = (() => {
         return x;
     }
 
-    function playRound(playerSelection, computerSelection){
-        computerSelection = computerPlay();
+    function playRound(playerSelection){
         console.log("Player: " + playerSelection);
-        document.getElementById("player").innerText = "Player: " + playerSelection;
+        computerSelection = computerPlay();
         console.log("PC: " + computerSelection);
-        document.getElementById("PC").innerText = "PC: " + computerSelection;
+        let result;
         if(playerSelection === "rock" && computerSelection === "paper"){
-            return "You Lost!";
+            result = "You Lost!";
         }else if(playerSelection === "paper" && computerSelection === "rock"){
-            return "You Won!";
+            result = "You Won!";
         }else if(playerSelection === "paper" && computerSelection === "scissor"){
-            return "You Lost!"; 
+            result = "You Lost!"; 
         }else if(playerSelection === "scissor" && computerSelection === "paper"){
-            return "You Won!";
+            result = "You Won!";
         }else if(playerSelection === "scissor" && computerSelection === "rock"){
-            return "You Lost!";
+            result = "You Lost!";
         }else if(playerSelection === "rock" && computerSelection === "scissor"){
-            return "You Won!";
+            result = "You Won!";
         }else if(playerSelection === "rock" && computerSelection === "rock"){
-            return "Equal";
+            result = "Equal";
         }else if(playerSelection === "paper" && computerSelection === "paper"){
-            return "Equal";
+            result = "Equal";
         }else if(playerSelection === "scissor" && computerSelection === "scissor"){
-            return "Equal";
+            result = "Equal";
         }else{
             return "C'è qualche problema in playRound";
         }
+        scoreboard.addScore([playerSelection, computerSelection, result]);
     }
 
-    return {computerPlay, playRound};
+    return {playRound};
 })();
 
 
@@ -183,4 +267,5 @@ const gameController = (() => {
 displayController.renderHeader();
 // displayController.renderSelectRounds();
 displayController.renderGame();
+displayController.setEventListeners();
 displayController.renderFooter();
