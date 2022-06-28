@@ -38,7 +38,7 @@ const displayController = (() =>{
         content.appendChild(buttons);
     }
 
-    const renderGame = () => {
+    const renderGame = (() => {
         //buttons
         const buttons = document.createElement('div');
         buttons.classList.add('centerInline', 'buttons');
@@ -82,19 +82,24 @@ const displayController = (() =>{
             }
         }
 
-        //append buttons
-        buttons.appendChild(rock);
-        buttons.appendChild(paper);
-        buttons.appendChild(scissor);
-        content.appendChild(buttons);
+        const renderLayout = () => {
+            //append buttons
+            buttons.appendChild(rock);
+            buttons.appendChild(paper);
+            buttons.appendChild(scissor);
+            content.appendChild(buttons);
 
-        //append scoreboard
-        scoreboard.appendChild(scoreboardHeadingYOU);
-        scoreboard.appendChild(scoreboardHeadingCPU);
-        scoreboard.appendChild(yourScores);
-        scoreboard.appendChild(cpusscores);
-        content.appendChild(scoreboard);
-    }
+            //append scoreboard
+            scoreboard.appendChild(scoreboardHeadingYOU);
+            scoreboard.appendChild(scoreboardHeadingCPU);
+            scoreboard.appendChild(yourScores);
+            scoreboard.appendChild(cpusscores);
+            content.appendChild(scoreboard);
+        }
+        
+
+        return {renderLayout, renderScoreboard}
+    })();
 
     let playerSelection = "nulla";
     const setEventListeners = () => {
@@ -105,17 +110,17 @@ const displayController = (() =>{
         rock.addEventListener('click', () => { 
             playerSelection = 'rock';
             gameController.playRound(playerSelection);
-            renderScoreboard();
+            renderGame.renderScoreboard();
         });
         paper.addEventListener('click', () => { 
             playerSelection = 'paper';
             gameController.playRound(playerSelection);
-            renderScoreboard();
+            renderGame.renderScoreboard();
         });
         scissor.addEventListener('click', () => { 
             playerSelection = 'scissor';
             gameController.playRound(playerSelection);
-            renderScoreboard();
+            renderGame.renderScoreboard();
         });
     }
 
@@ -123,67 +128,9 @@ const displayController = (() =>{
     return {renderHeader, renderFooter, renderSelectRounds, renderGame, setEventListeners};
 })();
 
-
-// const renderGame = (() => {
-//     //buttons
-//     const buttons = document.createElement('div');
-//     buttons.classList.add('centerInline', 'buttons');
-
-//     const rock = document.createElement('div');
-//     rock.classList.add('button', 'rock');
-//     const paper = document.createElement('div');
-//     paper.classList.add('button', 'paper');
-//     const scissor = document.createElement('div');
-//     scissor.classList.add('button', 'scissor');
-
-//     //scoreboard
-//     const scoreboard = document.createElement('div');
-//     scoreboard.classList.add('scoreboard');
-
-//     const scoreboardHeadingYOU = document.createElement('div');
-//     scoreboardHeadingYOU.classList.add('centerInline', 'scoreboardHeadings');
-//     scoreboardHeadingYOU.innerText = "YOU";
-//     const scoreboardHeadingCPU = document.createElement('div');
-//     scoreboardHeadingCPU.classList.add('centerInline', 'scoreboardHeadings');
-//     scoreboardHeadingCPU.innerText = "CPU";
-//     const yourScores = document.createElement('div');
-//     yourScores.setAttribute('id', 'yourscores');
-//     yourScores.classList.add('scores');
-//     const cpusscores = document.createElement('div');
-//     cpusscores.setAttribute('id', 'cpusscores');
-//     cpusscores.classList.add('scores');
-
-//     const renderScoreboard = () => {
-//         let you, cpu;
-//         for(let i = 0; i < scoreboard.getScores().length; i++){
-//             if(scoreboard.getScores()[i][2] == 'You Won!'){
-//                 you = divMaker(['winner', `${scoreboard.getScores()[i][0]}`]);
-//                 cpu = divMaker(['loser', `${scoreboard.getScores()[i][1]}`]);
-//             }else{
-//                 you = divMaker(['loser', `${scoreboard.getScores()[i][0]}`]);
-//                 cpu = divMaker(['winner', `${scoreboard.getScores()[i][1]}`]);
-//             }
-//             yourScores.appendChild(you);
-//             cpusscores.appendChild(cpu);
-//         }
-//     }
-
-//     //append buttons
-//     buttons.appendChild(rock);
-//     buttons.appendChild(paper);
-//     buttons.appendChild(scissor);
-//     content.appendChild(buttons);
-
-//     //append scoreboard
-//     scoreboard.appendChild(scoreboardHeadingYOU);
-//     scoreboard.appendChild(scoreboardHeadingCPU);
-//     scoreboard.appendChild(yourScores);
-//     scoreboard.appendChild(cpusscores);
-//     content.appendChild(scoreboard);
-
-//     return {renderScoreboard}
-// })();
-
+const diobono = () => {
+    console.log("diobono");
+}
 
 const divMaker = (classe, content) => {
     let div = document.createElement('div');
@@ -209,7 +156,11 @@ const scoreboard = (() => {
         console.log(scores);
     }
 
-    return {addScore, getScores};
+    const resetScoreboard = () => {
+        scores = [];
+    }
+
+    return {addScore, getScores, resetScoreboard};
 })();
 
 
@@ -266,6 +217,6 @@ const gameController = (() => {
 
 displayController.renderHeader();
 // displayController.renderSelectRounds();
-displayController.renderGame();
+displayController.renderGame.renderLayout();
 displayController.setEventListeners();
 displayController.renderFooter();
