@@ -36,6 +36,27 @@ const renderSelectRounds = () => {
     content.appendChild(buttons);
 }
 
+//SCOREBOARD
+const Scoreboard = (() => {
+    let scores = [];
+    
+    const getScores = () => {
+        return scores;
+    }
+
+    const addScore = (resultPlayRound/*array*/) => {
+        scores.push(resultPlayRound);
+    }
+
+    const resetScoreboard = () => {
+        scores = [];
+    }
+
+    return {addScore, getScores, resetScoreboard};
+})();
+
+
+
 const renderGame = (() => {
     //buttons
     const buttons = document.createElement('div');
@@ -67,13 +88,13 @@ const renderGame = (() => {
 
     const renderScoreboard = () => {
         let you, cpu;
-        for(let i = 0; i < scoreboard.getScores().length; i++){
-            if(scoreboard.getScores()[i][2] == 'You Won!'){
-                you = divMaker(['winner', `${scoreboard.getScores()[i][0]}`]);
-                cpu = divMaker(['loser', `${scoreboard.getScores()[i][1]}`]);
+        for(let i = 0; i < Scoreboard.getScores().length; i++){
+            if(Scoreboard.getScores()[i][2] == 'You Won!'){
+                you = divMaker(['winner', `${Scoreboard.getScores()[i][0]}`]);
+                cpu = divMaker(['loser', `${Scoreboard.getScores()[i][1]}`]);
             }else{
-                you = divMaker(['loser', `${scoreboard.getScores()[i][0]}`]);
-                cpu = divMaker(['winner', `${scoreboard.getScores()[i][1]}`]);
+                you = divMaker(['loser', `${Scoreboard.getScores()[i][0]}`]);
+                cpu = divMaker(['winner', `${Scoreboard.getScores()[i][1]}`]);
             }
             yourScores.appendChild(you);
             cpusscores.appendChild(cpu);
@@ -95,6 +116,7 @@ const renderGame = (() => {
         content.appendChild(scoreboard);
     }
     
+    
 
     return {renderLayout, renderScoreboard}
 })();
@@ -108,7 +130,7 @@ const setEventListeners = () => {
     rock.addEventListener('click', () => {
         playerSelection = 'rock';
         playRound(playerSelection);
-        renderGame.renderScoreboard();
+        renderGame.renderScoreboard();                      //FORSE PROVARE A PASSARGLIELO?
     });
     paper.addEventListener('click', () => {
         playerSelection = 'paper';
@@ -132,25 +154,6 @@ const divMaker = (classe, content) => {
     }
     return div;
 }
-
-//SCOREBOARD
-const scoreboard = (() => {
-    let scores = [];
-    
-    const getScores = () => {
-        return scores;
-    }
-
-    const addScore = (resultPlayRound/*array*/) => {
-        scores.push(resultPlayRound);
-    }
-
-    const resetScoreboard = () => {
-        scores = [];
-    }
-
-    return {addScore, getScores, resetScoreboard};
-})();
 
 
 const computerPlay = () => {
@@ -193,7 +196,7 @@ function playRound(playerSelection){
     }else{
         return "C'è qualche problema in playRound";
     }
-    scoreboard.addScore([playerSelection, computerSelection, result]);
+    Scoreboard.addScore([playerSelection, computerSelection, result]);
 }
 
 renderHeader();

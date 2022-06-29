@@ -69,13 +69,16 @@ const displayController = (() =>{
 
         const renderScoreboard = () => {
             let you, cpu;
-            for(let i = 0; i < scoreboard.getScores().length; i++){
-                if(scoreboard.getScores()[i][2] == 'You Won!'){
-                    you = divMaker(['winner', `${scoreboard.getScores()[i][0]}`]);
-                    cpu = divMaker(['loser', `${scoreboard.getScores()[i][1]}`]);
+            for(let i = 0; i < Scoreboard.getScores().length; i++){
+                if(Scoreboard.getScores()[i][2] == 'You Won!'){
+                    you = divMaker(['winner'], `${Scoreboard.getScores()[i][0]}`);
+                    cpu = divMaker(['loser'], `${Scoreboard.getScores()[i][1]}`);
+                }else if(Scoreboard.getScores()[i][2] == 'You Lost!'){
+                    you = divMaker(['loser'], `${Scoreboard.getScores()[i][0]}`);
+                    cpu = divMaker(['winner'], `${Scoreboard.getScores()[i][1]}`);
                 }else{
-                    you = divMaker(['loser', `${scoreboard.getScores()[i][0]}`]);
-                    cpu = divMaker(['winner', `${scoreboard.getScores()[i][1]}`]);
+                    you = divMaker([''], `${Scoreboard.getScores()[i][0]}`);
+                    cpu = divMaker([''], `${Scoreboard.getScores()[i][1]}`);
                 }
                 yourScores.appendChild(you);
                 cpusscores.appendChild(cpu);
@@ -128,23 +131,22 @@ const displayController = (() =>{
     return {renderHeader, renderFooter, renderSelectRounds, renderGame, setEventListeners};
 })();
 
-const diobono = () => {
-    console.log("diobono");
-}
-
 const divMaker = (classe, content) => {
     let div = document.createElement('div');
-    for(let i = 0; i < classe.length; i++){
-        div.classList.add(`${classe[i]}`);
+    if(classe != ""){
+        for(let i = 0; i < classe.length; i++){
+            div.classList.add(`${classe[i]}`);
+        }
     }
     if(content != undefined){
         div.innerText = content;
     }
+    console.log(div);
     return div;
 }
 
 //SCOREBOARD
-const scoreboard = (() => {
+const Scoreboard = (() => {
     let scores = [];
     
     const getScores = () => {
@@ -207,7 +209,7 @@ const gameController = (() => {
         }else{
             return "C'è qualche problema in playRound";
         }
-        scoreboard.addScore([playerSelection, computerSelection, result]);
+        Scoreboard.addScore([playerSelection, computerSelection, result]);
     }
 
     return {playRound};
